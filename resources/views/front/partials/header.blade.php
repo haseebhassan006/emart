@@ -52,7 +52,8 @@
       <h6 id="grandTotal"></h6>
     </div>
     <div class="modal-footer">
-      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+<a href="{{route('checkout')}}" id="checkBtn" style="display: none;" class="waves-effect btn">Continue To Checkout</a>
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" id="cartFoot">Agree</a>
     </div>
   </div>
   <div id="modalLogin" class="modal" style="top: 20%">

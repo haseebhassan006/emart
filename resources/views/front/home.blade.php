@@ -27,32 +27,22 @@
     </div>
   </div>
 </div>
+<div class="col s12 m12 l9 pr-0">
+    <div id="load_product">
+
+
+      
+</div>
+<div id="hading"></div>
 <div id="searchResult">
 
 
   
 </div>
-@foreach($products as $product)
-      <div class="col s12 m4 l4" id="mainDiv">
-        <div class="card animate fadeLeft" id="proDiv ">
-       
-          <div class="card-badge"><a class="white-text"> <b>{{$product->discount_percent}}</b> </a></div>
-          <div class="card-content">
-            <p>{{$product->name}}</p>
-            <span class="card-title text-ellipsis">{{$product->discription}}</span>
-            <img src="{{asset('uploads/'. $product->image)}}" class="responsive-img" alt="">
-            <div class="display-flex flex-wrap justify-content-center">
-              <h5 class="mt-3">${{$product->price}}</h5>
-              <a class="mt-2 waves-effect waves-light gradient-45deg-deep-purple-blue btn btn-block modal-trigger z-depth-4"
-                href="#modal{{$product->id}}">View</a>
-            </div>
-          </div>
-        </div>
-        <!-- Modal Structure -->
-      @php $last_id = $product->id; @endphp
-      </div>
-  @endforeach
-  <div id="load_product" class="col s12 m12 l9 pr-0"></div>
+
+  
+ 
+
      <!-- <div class="col s12 m4 l4">
         <div class="card animate fadeUp">
           <div class="card-content">
@@ -70,11 +60,12 @@
         <!-- Modal Structure -->
       
       </div>
+      
+    </div>
          {{ csrf_field() }}
    
   <div class="col s12 center">
-      <a type="button" class="waves-effect waves-light btn gradient-45deg-deep-purple-blue mt-2 mr-2" data-id="{{$last_id}}" id="loadBtn">Load More</a>
-  </div>
+        </div>
         
       @foreach($products as $product)
         <div id="modal{{$product->id}}" class="modal modal-fixed-footer">
@@ -84,13 +75,13 @@
                 <a class="modal-close right"><i class="material-icons">close</i></a>
               </div>
               <div class="col m6 s12">
-                <img src="{{asset('storage/'. $product->image)}}" class="responsive-img" alt="">
+                <img src="{{asset('uploads/'. $product->image)}}" class="responsive-img" alt="">
               </div>
               <div class="col m6 s12">
-                <p>Smartwatches</p>
-                <h5>Smartwatch 2.0 LTE Wifi</h5>
+                <p>{{$product->name}}</p>
+                <h5>{{$product->description}}</h5>
                 <span class="new badge left ml-0 mr-2" data-badge-caption="">4.2 Star</span>
-                <p>Availability: <span class="green-text">36 Item Available</span></p>
+                <p>Availability: <span class="green-text">{{$product->quantity}} Item Available</span></p>
                 <hr class="mb-5">
                 <span class="vertical-align-top mr-4"><i class="material-icons mr-3">favorite_border</i>Wishlist</span>
                 <ul class="list-bullet">
@@ -335,15 +326,34 @@
 
     const cartBox = document.getElementById('cartTable');
     var grandTotal = document.getElementById('grandTotal');
+    
+
     let tableData = ''
     tableData += '<tr><th>Name</th><th>Price</th><th>T.Price</th><th>Quantity</th><th>Action</th></tr>';
     if (JSON.parse(localStorage.getItem('items')) === null) {
-      tableData += '<tr><td>No Product Added To Cart</td></tr>'
+      tableData +='<tr><td>No Product Added To Cart</td></tr>'
+
     }else{
       JSON.parse(localStorage.getItem('items')).map(data=>{
-        tableData += '<tr><td>'+data.name+'</td><td>'+data.price+'</td><td class="total_price">'+parseInt(data.price)*parseInt(data.quantity)+'</td><td>'+data.quantity+'</td><td><a class="btn red"><i class="material-icons">delete</i></a></td></tr>'
+        tableData += '<tr><td>'+data.id+'</td><td>'+data.name+'</td><td>'+data.price+'</td><td class="total_price">'+parseInt(data.price)*parseInt(data.quantity)+'</td><td>'+data.quantity+'</td><td><a class="btn red" type="button" onclick=Delete(this)><i class="material-icons">delete</i></a></td></tr>'
         grandTotal.innerHTML = parseInt(t_price + data.price);
+       $('#checkBtn').show();
       })
+
+      function Delete(e){
+        console.log(e.parentElement.parentElement.children[0]);
+        let items = [];
+        JSON.parse(localStorage.getItem('items')).map(data=>{
+          if (data.id != e.parentElement.parentElement.children[0].textContent) {
+            items.push(data);
+          }
+
+
+        })
+        localStorage.setItem('items',JSON.stringify(items));
+       
+
+      }
     }
     cartBox.innerHTML = tableData;
 
@@ -362,7 +372,7 @@
 
      var _token = $('input[name="_token"]').val();
 
-    
+    load_data('',_token);
       function load_data(id="", _token)
  {
   $.ajax({
@@ -372,19 +382,23 @@
    success:function(data)
    {
    console.log(data);
-   var output = '';
+
+  /* var output = '';
    $.map(data, function(item) {
-   output +='<div class="col s12 m4 l4"><div class="card animate fadeLeft"><div class="card-badge"><a class="white-text"> <b>'+item['discount_percent']+'</b> </a></div><div class="card-content"><p>'+item['name']+'</p><span class="card-title text-ellipsis">'+item['description']+'</span><div class="display-flex flex-wrap justify-content-center"><h5 class="mt-3">$'+item['price']+'</h5><a class="mt-2 waves-effect waves-light gradient-45deg-deep-purple-blue btn btn-block modal-trigger z-depth-4" href="#modal'+item['id']+'">View</a></div></div></div>'
-});
-    $('#load_product').append(output);
+   output +='<div class="col col s12 m4 l4"><div class="card animate fadeLeft"><div class="card-badge"><a class="white-text"> <b>'+item['discount_percent']+'</b> </a></div><div class="card-content"><p>'+item['name']+'</p><span class="card-title text-ellipsis">'+item['description']+'</span><div class="display-flex flex-wrap justify-content-center"><h5 class="mt-3">$'+item['price']+'</h5><a class="mt-2 waves-effect waves-light gradient-45deg-deep-purple-blue btn btn-block modal-trigger z-depth-4" href="#modal'+item['id']+'">View</a></div></div></div>'
+});*/
+    $('#load_more_button').remove();
+    $('#load_product').append(data);
 
    }
   })
  }
 
- $(document).on('click', '#loadBtn', function(){
+ 
+
+ $(document).on('click', '#load_more_button', function(){
   var id = $(this).data('id');
-   $('#loadBtn').html('<b>Loading...</b>');
+   $('#load_more_button').html('<b>Loading...</b>');
     load_data(id,_token);
 
 
@@ -401,6 +415,7 @@
    success:function(data)
    {
 
+
     var output = ''
 
     $.map(data, function(item) {
@@ -408,14 +423,45 @@
         output +='<div class="col s12 m4 l4" id="mainDiv"><div class="card animate fadeLeft" id="proDiv "><div class="card-badge"><a class="white-text"><b>'+item['products'][i].discount_percent+'</div><div class="card-content"><p>'+item['products'][i].name+'</p><span class="card-title text-ellipsis">'+item['products'][i].description+'</span><img src="http://mauth.test/uploads/'+item['products'][i].image+'" class="responsive-img" alt=""></div></div></div>';
 
        }
-       
+
+       $('#hading').html('<h4>Search Result</h4>');
        $("#searchResult").append(output);
+
+       $("#mainDiv").hide();
     })
 
    }
      
      
 });
+ })
+
+ $(document).on('click','#searchPri',function(){
+    var search = $('input[name="searchPrice"]').val(); 
+    var _token = $('input[name="_token"]').val();
+    $.ajax({
+       url:"{{ route('search.product.price') }}",
+       method:"POST",
+       data:{search:search,_token:_token},
+        success:function(data){
+          
+           var output = ''
+           $.map(data, function(item) {
+
+
+            output +='<div class="col col s12 m4 l4"><div class="card animate fadeLeft"><div class="card-badge"><a class="white-text"> <b>'+item['discount_percent']+'</b> </a></div><div class="card-content"><p>'+item['name']+'</p><span class="card-title text-ellipsis">'+item['description']+'</span><div class="display-flex flex-wrap justify-content-center"><h5 class="mt-3">$'+item['price']+'</h5><a class="mt-2 waves-effect waves-light gradient-45deg-deep-purple-blue btn btn-block modal-trigger z-depth-4" href="#modal'+item['id']+'">View</a></div></div></div>';
+             
+
+           })
+           $("#searchResult").append(output);
+           $("#mainDiv").css('display','none');
+
+
+
+   }
+
+    });
+
  })
 
   });

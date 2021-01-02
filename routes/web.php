@@ -19,6 +19,8 @@ Route::get('/', [App\Http\Controllers\FrontController\HomePageController::class,
 Route::get('category/{id}',[App\Http\Controllers\FrontController\HomePageController::class, 'categoryWiseProduct'])->name('category.wise.product');
 Route::post('loadmore',[App\Http\Controllers\FrontController\HomePageController::class, 'loadMoreProduct'])->name('loadmore.product');
 Route::post('search',[App\Http\Controllers\FrontController\HomePageController::class, 'search'])->name('search.product');
+Route::post('search/price',[App\Http\Controllers\FrontController\HomePageController::class, 'searchByPrice'])->name('search.product.price');
+Route::get('checkout',[App\Http\Controllers\FrontController\CheckoutController::class,'index'])->name('checkout');
 
 
 Auth::routes();
