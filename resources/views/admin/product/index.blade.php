@@ -26,7 +26,7 @@
       @foreach($products as $product)
                   <tr>
                      <td>{{$product->name}}</td>
-                       <td><img src="{{asset('storage/'.$product->image)}}" alt="{{$product->title}}" class="img-responsive" height="50"/></td>
+                       <td><img src="{{asset('uploads/'.$product->image)}}" alt="{{$product->title}}" class="img-responsive" height="50"/></td>
                      <td>${{$product->price}}</td>
                     <td>{{$product->slug}}</td>
                      <td>

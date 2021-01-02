@@ -41,7 +41,7 @@ class ProductController extends Controller
        $validator = Validator::make($request->all(), [
             'name' => 'required',
             'description' => 'required',
-            'thumbnail' => 'required',
+           
             'category_id' => 'required',
             'tag_id' => 'required',
             'brand_id' => 'required',
@@ -136,11 +136,8 @@ class ProductController extends Controller
 
 
        $product = Product::with('categories')->find($id);
- 
-     
-       
-    
-    if($product->image){
+
+   if($product->image){
             Storage::delete($product->image);
            $extension = ".".$request->thumbnail->getClientOriginalExtension();
            $name = basename($request->thumbnail->getClientOriginalName(), $extension).time();
@@ -173,6 +170,8 @@ class ProductController extends Controller
           return response()->json(['error'=>$validator->errors()->all()]);
 
          }
+       
+    
         
 
 

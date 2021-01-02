@@ -22,6 +22,21 @@ class HomePageController extends Controller
 
 	}
 
+  public function search(Request $request){
+   
+   $searchKeyword  = $request->search;
+  
+   $result = Category::with('products')->where('category', 'like', '%'.$searchKeyword.'%')->get();
+
+ 
+   return response()->json($result);
+
+
+ 
+
+
+  }
+
 	public function categoryWiseProduct(Request $request){
 
 		$id = $request->id;

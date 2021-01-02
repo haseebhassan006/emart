@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [App\Http\Controllers\FrontController\HomePageController::class, 'index']);
 Route::get('category/{id}',[App\Http\Controllers\FrontController\HomePageController::class, 'categoryWiseProduct'])->name('category.wise.product');
 Route::post('loadmore',[App\Http\Controllers\FrontController\HomePageController::class, 'loadMoreProduct'])->name('loadmore.product');
+Route::post('search',[App\Http\Controllers\FrontController\HomePageController::class, 'search'])->name('search.product');
 
 
 Auth::routes();

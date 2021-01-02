@@ -7,16 +7,40 @@
 @include('front.partials.sidebar')
 
 <div class="col s12 m12 l9 pr-0">
+<div class="card">
+    <div class="card-content">
+      <div class="row">
+        <div class="input-field col m3 s12">
+          <input placeholder="search by category" type="text"  name="searchCategory" id="categorySearch" class="">
+        </div>
+        <div class="input-field col m3 s12">
+          <a type="button" id="searchCat"  class="btn waves-effect">search</a>
+        </div>
+         <div class="input-field col m3 s12">
+          <input type="text" placeholder="search by price"  name="searchPrice" id="priceSearch" class="">
+        </div>
+        <div class="input-field col m3 s12">
+          <a type="button" id="searchPri" class="btn waves-effect">search</a>
+        </div>
+      </div>
 
+    </div>
+  </div>
+</div>
+<div id="searchResult">
+
+
+  
+</div>
 @foreach($products as $product)
-      <div class="col s12 m4 l4">
-        <div class="card animate fadeLeft">
-          <input type="hidden" class="productId" name="id" id="productId{{$product->id}}" >
+      <div class="col s12 m4 l4" id="mainDiv">
+        <div class="card animate fadeLeft" id="proDiv ">
+       
           <div class="card-badge"><a class="white-text"> <b>{{$product->discount_percent}}</b> </a></div>
           <div class="card-content">
             <p>{{$product->name}}</p>
             <span class="card-title text-ellipsis">{{$product->discription}}</span>
-            <img src="{{asset('storage/'. $product->image)}}" class="responsive-img" alt="">
+            <img src="{{asset('uploads/'. $product->image)}}" class="responsive-img" alt="">
             <div class="display-flex flex-wrap justify-content-center">
               <h5 class="mt-3">${{$product->price}}</h5>
               <a class="mt-2 waves-effect waves-light gradient-45deg-deep-purple-blue btn btn-block modal-trigger z-depth-4"
@@ -28,6 +52,7 @@
       @php $last_id = $product->id; @endphp
       </div>
   @endforeach
+  <div id="load_product" class="col s12 m12 l9 pr-0"></div>
      <!-- <div class="col s12 m4 l4">
         <div class="card animate fadeUp">
           <div class="card-content">
@@ -45,7 +70,12 @@
         <!-- Modal Structure -->
       
       </div>
-        <div id="load_product" class="col s12 m12 l9 pr-0"></div>
+         {{ csrf_field() }}
+   
+  <div class="col s12 center">
+      <a type="button" class="waves-effect waves-light btn gradient-45deg-deep-purple-blue mt-2 mr-2" data-id="{{$last_id}}" id="loadBtn">Load More</a>
+  </div>
+        
       @foreach($products as $product)
         <div id="modal{{$product->id}}" class="modal modal-fixed-footer">
     <div class="modal-content pt-2">
@@ -78,11 +108,7 @@
 
   </div>
   @endforeach
-   {{ csrf_field() }}
-   
-  <div class="col s12 center">
-      <a type="button" class="waves-effect waves-light btn gradient-45deg-deep-purple-blue mt-2 mr-2" data-id="{{$last_id}}" id="loadBtn">Load More</a>
-  </div>
+
       <!--<div class="col s12 m4 l4">
         <div class="card animate fadeRight">
           <div class="card-content">
@@ -229,6 +255,7 @@
         
 @endsection
 @section('scripts')
+
 <script type="text/javascript">
   
   document.addEventListener('DOMContentLoaded', function() {
@@ -324,9 +351,17 @@
 }
 </script>
 <script type="text/javascript">
+      $.ajaxSetup({
+  headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  }
+})
+</script>
+<script type="text/javascript">
   $(document).ready(function(){
 
      var _token = $('input[name="_token"]').val();
+
     
       function load_data(id="", _token)
  {
@@ -355,6 +390,33 @@
 
  
  });
+
+ $(document).on('click','#searchCat',function(){
+  var search = $('input[name="searchCategory"]').val(); 
+     var _token = $('input[name="_token"]').val();
+  $.ajax({
+     url:"{{ route('search.product') }}",
+   method:"POST",
+   data:{search:search,_token:_token},
+   success:function(data)
+   {
+
+    var output = ''
+
+    $.map(data, function(item) {
+       for (var i=0; i < item['products'].length; i++) {
+        output +='<div class="col s12 m4 l4" id="mainDiv"><div class="card animate fadeLeft" id="proDiv "><div class="card-badge"><a class="white-text"><b>'+item['products'][i].discount_percent+'</div><div class="card-content"><p>'+item['products'][i].name+'</p><span class="card-title text-ellipsis">'+item['products'][i].description+'</span><img src="http://mauth.test/uploads/'+item['products'][i].image+'" class="responsive-img" alt=""></div></div></div>';
+
+       }
+       
+       $("#searchResult").append(output);
+    })
+
+   }
+     
+     
+});
+ })
 
   });
 </script>
