@@ -17,6 +17,7 @@ class CreateSizesTable extends Migration
             $table->id();
             $table->string('size');
             $table->timestamps();
+         
         });
     }
 
@@ -27,6 +28,6 @@ class CreateSizesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sizes');
+        Schema::dropIfExists('');
     }
 }
