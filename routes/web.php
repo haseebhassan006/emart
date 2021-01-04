@@ -22,6 +22,7 @@ Route::post('search',[App\Http\Controllers\FrontController\HomePageController::c
 Route::post('search/price',[App\Http\Controllers\FrontController\HomePageController::class, 'searchByPrice'])->name('search.product.price');
 Route::get('checkout',[App\Http\Controllers\FrontController\CheckoutController::class,'index'])->name('checkout');
 Route::post('dynamic/select',[App\Http\Controllers\FrontController\CheckoutController::class,'fetch'])->name('city.country.state');
+Route::post('checkout',[App\Http\Controllers\Admin\OrderController::class,'placeOrder'])->name('place.order');
 
 
 Auth::routes();

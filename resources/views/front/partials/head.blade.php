@@ -24,5 +24,6 @@
     <link rel="stylesheet" type="text/css" href="{{asset('asset/admin/app-assets/vendors/noUiSlider/nouislider.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('asset/admin/app-assets/css/pages/eCommerce-products-page.css')}}">
     <link rel="stylesheet" type="text/css" href="{{asset('asset/admin/app-assets/css/custom/custom.css')}}">
+    <script src="https://js.stripe.com/v3/"></script>
     <!-- END: Custom CSS-->
   </head>
